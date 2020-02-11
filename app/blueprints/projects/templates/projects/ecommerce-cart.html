@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('projects.static', filename='css/projects.css')  }}">
+{% endblock %}
+
+{% set active_page="projects.ecommerceCart" %}
+
+{% block content %}
+    <h3>Cart</h3>
+  <hr>
+  
+    
+
+{% endblock %}

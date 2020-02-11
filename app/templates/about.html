@@ -1,6 +1,27 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <h3>About page</h3>
-  
+  <h3>About page </h3>
+  <h6>Change your credentials</h6>
+  <hr>
+  <div class="col-md-6 offset-md-3">
+    <form action="{{ url_for('account.about') }}" method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.name(placeholder="Name", class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.email(placeholder="Email", class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.password(placeholder="Password", class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.confirm_password(placeholder="Confirm Password", class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary btn-block") }}
+      </div>
+    </form>
+  </div>
 {% endblock %}

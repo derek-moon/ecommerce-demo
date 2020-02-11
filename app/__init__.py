@@ -1,7 +1,8 @@
 from flask import Flask
+from flask_dotenv import DotEnv
+
 import os
 from config import Config
-
 
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
@@ -16,6 +17,7 @@ login.login_message_category = 'danger'
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    
     if os.environ['FLASK_ENV'] == ' development':
         app.config['SQLALCHEMY_DATABASE_URI'] = os.path.join(basedir,'app.db')
 
@@ -32,6 +34,11 @@ def create_app(config_class=Config):
 
     from app.blueprints.main import main
     app.register_blueprint(main, url_prefix='/')
+
+
+    from app.blueprints.projects import projects
+    app.register_blueprint(projects, url_prefix='/projects')
+
 
     with app.app_context():
         from app import models, cli

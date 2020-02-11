@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('projects.static', filename='css/projects.css')  }}">
+{% endblock %}
+
+{% set active_page="projects.ecommerce" %}
+
+{% block content %}
+    <h3>E-commerce
+        <span class="float-right">
+        <a href="{{url_for('projects.ecommerceCart')}}" class="btn btn-primary">
+            Show cart
+        </a>
+    </span>
+    </h3>
+  <hr>
+  <div class="row">
+      {% for p in products %}
+    <div class="col-md-3">
+        <figure class="card card-product">
+            <div class="img-wrap"> 
+                <img class="img-fluid" src="{{p.image}}">
+                <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
+            </div>
+            <figcaption class="info-wrap">
+                <h6 class="title text-dots"><a href="#">{{p.name}}</a></h6>
+                <div class="action-wrap">
+                    <a href="{{url_for('projects.ecommerceCartAdd', id=p.id)}}" class="btn btn-primary btn-sm float-right">Add to Cart </a>
+                    <div class="price-wrap h5">
+                        <span class="price-new">${{p.price}}</span>
+                    </div> <!-- price-wrap.// -->
+                </div> <!-- action-wrap -->
+            </figcaption>
+        </figure> <!-- card // -->
+    </div> <!-- col // -->
+      {% endfor %}  
+    </div> <!-- row.// -->
+    
+
+{% endblock %}

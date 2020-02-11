@@ -1,10 +1,34 @@
 from app import db
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from app.models import User
-from app.blueprints.account.forms import LoginForm, RegistrationForm
-from flask_login import login_user, logout_user, login_required
+from app.blueprints.account.forms import LoginForm, RegistrationForm, ProfileForm
+from flask_login import login_user, logout_user, login_required, current_user, login_required
 
 from app.blueprints.account import account
+
+@account.route('/about',methods=['GET','POST'])
+@login_required
+def about():
+    form = ProfileForm()
+    context ={
+        'form':form
+    }
+    if request.method == 'GET':
+        form.name.data = current_user.name 
+        form.email.data = current_user.email
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        current_user.name = form.name.data
+        current_user.password = form.password.data
+        current_user.generate_password(current_user.password)
+        db.session.commit()
+        flash("Profile information updated successfully","success")
+        return redirect(url_for('account.about'))
+
+
+    return render_template('about.html',**context)
+
+
 
 @account.route('/profile')
 def profile():
