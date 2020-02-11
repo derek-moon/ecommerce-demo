@@ -28,7 +28,13 @@ def about():
 
     return render_template('about.html',**context)
 
-
+@account.route('/post/delete/<int:id>')
+def delete_post(id):
+    p = Post.query.get(id)
+    db.session.delete(p)
+    db.session.commit()
+    flash("Post deleted successfully","info")
+    return redirect(url_for('account.profile',id=current_user.id))
 
 @account.route('/profile/<int:id>',methods=['GET','POST'])
 @login_required
@@ -39,12 +45,13 @@ def profile(id):
         db.session.add(p)
         db.session.commit()
         flash("Post added succesfully!", 'success')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('account.profile',id=id))
     context = {
         'form':form,
         'posts': Post.query.filter_by(user_id=id).order_by(Post.timestamp.desc()).all()
     }
     return render_template('profile.html', **context)
+
 
 
 @account.route('/login', methods=['GET','POST'])

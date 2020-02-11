@@ -23,6 +23,7 @@ def index():
     return render_template('index.html', **context)
 
 @main.route('/users')
+@login_required
 def users():
     context = {
         'users':User.query.all()
