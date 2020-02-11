@@ -1,7 +1,7 @@
 from app import db
 from flask import render_template, redirect, url_for, flash, request
-from app.models import User
-from app.blueprints.account.forms import LoginForm, RegistrationForm, ProfileForm
+from app.models import User, Post
+from app.blueprints.account.forms import LoginForm, RegistrationForm, ProfileForm, BlogForm
 from flask_login import login_user, logout_user, login_required, current_user, login_required
 
 from app.blueprints.account import account
@@ -30,12 +30,20 @@ def about():
 
 
 
-@account.route('/profile')
-def profile():
-    context = dict(
-        username='Derek_codingtemple',
-        email="Derek_h@codingtemple.com"
-    )
+@account.route('/profile/<int:id>',methods=['GET','POST'])
+@login_required
+def profile(id):
+    form = BlogForm()
+    if form.validate_on_submit():
+        p = Post(body=form.body.data, user_id=current_user.id)
+        db.session.add(p)
+        db.session.commit()
+        flash("Post added succesfully!", 'success')
+        return redirect(url_for('main.index'))
+    context = {
+        'form':form,
+        'posts': Post.query.filter_by(user_id=id).order_by(Post.timestamp.desc()).all()
+    }
     return render_template('profile.html', **context)
 
 
@@ -75,7 +83,9 @@ def register():
         db.session.commit()
         flash("You have registered successfully","success")
         return redirect(url_for('account.login'))
-    
+    else:
+        flash("Email already in use ","danger")
+        return redirect(url_for('account.login'))
     context = {
         'form':form
     }

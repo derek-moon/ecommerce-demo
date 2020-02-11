@@ -23,7 +23,7 @@ def create_app(config_class=Config):
 
     app.config.from_object(config_class)
     db.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app,db)
     login.init_app(app)
 
     from app.blueprints.account import account
@@ -35,11 +35,12 @@ def create_app(config_class=Config):
     from app.blueprints.main import main
     app.register_blueprint(main, url_prefix='/')
 
-
     from app.blueprints.projects import projects
     app.register_blueprint(projects, url_prefix='/projects')
 
-
+    from flask_moment import Moment
+    moment = Moment(app)
+    
     with app.app_context():
         from app import models, cli
     return app
