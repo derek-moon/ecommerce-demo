@@ -2,7 +2,15 @@
 
 {% block content %}
   <h3>About page </h3>
-  <h6>Change your credentials</h6>
+  <div class="clearfix">
+    <h6 class="float-left">Change your credentials</h6>
+  <span class="float-right">
+    <a class="btn btn-danger" href="{{url_for('main.users_delete',user=current_user)}}">
+      Delete Account
+    </a>
+  </span>
+  </div>
+  
   <hr>
   <div class="col-md-6 offset-md-3">
     <form action="{{ url_for('account.about') }}" method="POST">

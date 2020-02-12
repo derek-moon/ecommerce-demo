@@ -8,10 +8,13 @@ from app.blueprints.main import main
 import requests 
 
 @main.route('/', methods=['GET','POST'])
+@login_required
+
 def index():
     form = BlogForm()
     context = {
         'form':form,
+        #current_user.followed_posts()
         'posts':Post.query.order_by(Post.timestamp.desc()).all()
     }
     if form.validate_on_submit():
@@ -26,6 +29,38 @@ def index():
 @login_required
 def users():
     context = {
-        'users':User.query.all()
+        'users':[i for i in User.query.all() if i.id != current_user.id]
     }
     return render_template('users.html', **context)
+
+#<user> passed in HTML href=""
+@main.route('/users/add/<user>')
+@login_required
+def users_add(user):
+    user = User.query.filter_by(name=user).first()
+    if user not in current_user.followed:
+        flash("User followed successfully", "success")
+        current_user.follow(user)
+        return redirect(url_for('main.users'))
+    flash(f"You are already following {user.name}", "warning")
+    return redirect(url_for('main.users'))
+    
+@main.route('/users/remove/<user>')
+@login_required
+def users_remove(user):
+    user = User.query.filter_by(name=user).first()
+    if user in current_user.followed:
+        current_user.unfollow(user)
+        flash("User unfollowed successfully", "warning")
+        return redirect(url_for('main.users'))
+    flash(f"You are not following {user.name}", "danger")
+    return redirect(url_for('main.users'))
+
+@main.route('/users/delete/<user>')
+@login_required
+def users_delete(user):
+    user = current_user
+    db.session.delete(user)
+    db.session.commit()
+    flash("Your was deleted", "success")
+    return redirect(url_for('main.index'))

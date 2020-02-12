@@ -29,6 +29,7 @@ def about():
     return render_template('about.html',**context)
 
 @account.route('/post/delete/<int:id>')
+@login_required
 def delete_post(id):
     p = Post.query.get(id)
     db.session.delete(p)

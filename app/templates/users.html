@@ -2,18 +2,27 @@
 
 {% block content %}
   <h3>Users</h3>
-  <div class="com-md-6 offset-md-3">
+<div class="com-md-6 offset-md-3">
 <table class="table table-striped table-inverse table-responsive">
  
     <tbody>
       {% if users %}
         {% for u in users %}
           <tr>
-            <td>{{ u }}</td>
+            <td>
+              {{ u }}
+              {% if current_user.is_following(u) %}
+              <span class="float-right"> <a href="{{url_for('main.users_remove', user=u)}}" class="btn btn-warning">Unfollow -</a></span>
+              {% else%}
+              <span class="float-right"> <a href="{{url_for('main.users_add', user=u)}}" class="btn btn-success">Follow +</a></span>
+              {% endif %}
+
+
+            </td>
           </tr>
         {% endfor %}
       {% endif %}      
     </tbody>
 </table>
-  </div>
+</div>
   {% endblock %}
