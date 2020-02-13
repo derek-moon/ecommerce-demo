@@ -20,3 +20,14 @@ stripeProductsList = [
     )
     for p in stripe.SKU.list().data
     ]
+def initProducts():
+  return [
+    dict(
+      id=p.id,
+      prod_id=p.product,
+      name=p.attributes.name,
+      image=p.image,
+      price=convert_price(p.price)
+    )
+    for p in stripe.SKU.list().data
+  ]

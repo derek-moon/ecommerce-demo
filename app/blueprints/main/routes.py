@@ -14,8 +14,9 @@ def index():
     form = BlogForm()
     context = {
         'form':form,
-        #current_user.followed_posts()
+       
         'posts':Post.query.order_by(Post.timestamp.desc()).all()
+        #current_user.followed_posts()
     }
     if form.validate_on_submit():
         p = Post(body=form.body.data, user_id=current_user.id)
